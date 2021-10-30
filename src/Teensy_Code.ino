@@ -1,3 +1,4 @@
+# include <Arduino.h>
 
 int Pot_Input = 21;   
 int Motor_Output = 13; 
@@ -12,3 +13,5 @@ void loop() {
   int angle = map(val,1,1023,0,270);
   Serial.println(angle);
 }
+
+// hello
