@@ -13,7 +13,7 @@ void setup() {
 
 void loop() {
   int val = analogRead(Pot_Input); 
-  int angle = map(val,1,1023,0,270);
+  int angle = map(val,1,1023,0,180);
   Serial.println(angle);
   myservo.write(angle);
 }
