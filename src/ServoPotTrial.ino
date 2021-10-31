@@ -9,7 +9,7 @@ void setup() {
   myservo.attach(13);  //servo signal pin connected to pin 13
   Serial.begin (9600);  //arduino setup
 
-}
+} 
 
 void loop() {
   int val = analogRead(Pot_Input);  //read value from pot
