@@ -1,11 +1,12 @@
 # include <Arduino.h>
 
-int LEDPin = 6;
+int LEDPin = 13;
 int push_button = 10;
 
 void setup() {
     pinMode(LEDPin, OUTPUT);
     pinMode(push_button, INPUT);
+    Serial.begin(9600);
 }
 
 void loop(){
