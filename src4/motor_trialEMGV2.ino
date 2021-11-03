@@ -7,7 +7,6 @@
 // the exception of STBY which the Redbot controls with a physical switch
 
 #define DIR1 17 // YELLOW DIR1 ON MOTOR DRIVER
-#define DIR2 16 // WHITE 
 #define PWM1 22
 
 #define EMG 23
@@ -20,14 +19,12 @@ const int offsetA = 1;
 // motors as you have memory for.  If you are using functions like forward
 // that take 2 motors as arguements you can either write new functions or
 // call the function more than once.
-Motor motor1 = Motor(DIR1, DIR2, PWM1, offsetA);
+Motor motor1 = Motor(DIR1, PWM1, offsetA);
 
 void setup()
 {
 Serial.begin(9600);
   pinMode(DIR1,OUTPUT);
-  pinMode(DIR2,OUTPUT);
-
   pinMode(PWM1,OUTPUT);
   pinMode(EMG,INPUT);
   
