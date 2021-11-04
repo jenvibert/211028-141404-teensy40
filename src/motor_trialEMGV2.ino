@@ -1,38 +1,54 @@
-#include <Arduino.h> 
-#include <util/atomic.h> // For the ATOMIC_BLOCK macro
-#include <SparkFun_TB6612.h>
 
-// Pins for all inputs, keep in mind the PWM defines must be on PWM pins
-// the default pins listed are the ones used on the Redbot (ROB-12097) with
-// the exception of STBY which the Redbot controls with a physical switch
+#ifndef SPARKFUN_TB6612_h
+#define SPARKFUN_TB6612_h
+#include <Arduino.h>
 
 #define DIR1 17 // YELLOW DIR1 ON MOTOR DRIVER
 #define PWM1 22
-
 #define EMG 23
 
-// these constants are used to allow you to make your motor configuration 
-// line up with function names like forward.  Value can be 1 or -1
+using namespace std;
 const int offsetA = 1;
-
-// Initializing motors.  The library will allow you to initialize as many
-// motors as you have memory for.  If you are using functions like forward
-// that take 2 motors as arguements you can either write new functions or
-// call the function more than once.
-Motor motor1 = Motor(DIR1, PWM1, offsetA);
 
 void setup()
 {
-Serial.begin(9600);
-  pinMode(DIR1,OUTPUT);
-  pinMode(PWM1,OUTPUT);
   pinMode(EMG,INPUT);
-  
+  Serial.begin(9600);
 }
 
+  class Motor
+{
+  public:
+    Motor(int In1pin, int PWMpin, const int offset);      
+    //void drive(Motor motor1,int speed);  
+    void drive(int speed, int duration);  
+    int In1, PWM, Offset;
+	//Stops motor by setting both input pins high
+    void brake(); 
+	
+  private:
+	//
+	
+	//private functions that spin the motor CC and CCW
+	void fwd(int speed);
+	void rev(int speed);
+  
+};
+void drive(Motor, int speed);
+
+void forward(Motor, int speed);
+//void forward(Motor motor1);
+
+void back(Motor, int speed);
+//void back(Motor motor1);
+
+void brake(Motor);
+
+#endif
 
 void loop()
 {
+   Motor motor1 = Motor(DIR1, PWM1, offsetA);
    //Use of the drive function which takes as arguements the speed
    //and optional duration.  A negative speed will cause it to go
    //backwards.  Speed can be from -255 to 255.  Also use of the 
@@ -44,9 +60,8 @@ void loop()
    
    int val = analogRead(EMG);
    int angle = map(val,1,1023,0,180);
-   int target = angle;
    Serial.println(angle);
-   //Reading emg value
+   //Reading EMG value
 
    //Use of the forward function, which takes as arguements two motors
    //and optionally a speed.  If a negative number is used for speed
@@ -70,7 +85,6 @@ void loop()
    //the appropriate direction.  For turning a single motor use drive.
    drive(motor1, 100);
    delay(1000);
-   
    
    //Use of brake again.
    brake(motor1);
