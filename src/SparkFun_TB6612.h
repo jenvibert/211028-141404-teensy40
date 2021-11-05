@@ -14,7 +14,7 @@
 	
   private:
 	//
-	int In1, PWM, Offset,
+	int In1, PWM, Offset;
 	//private functions that spin the motor CC and CCW
 	void fwd(int speed);
 	void rev(int speed);
