@@ -1,10 +1,19 @@
 
-#ifndef SPARKFUN_TB6612_h
-#define SPARKFUN_TB6612_h
+#include "SparkFun_TB6612.h"
 #include <Arduino.h>
 
-#define DIR1 17 // YELLOW DIR1 ON MOTOR DRIVER
-#define PWM1 22
+Motor::Motor1(int In1pin, int PWMpin, int offset)
+{
+  DIR1 = In1pin;
+  PWM1 = PWMpin;
+  OffsetA = offset;
+  
+  pinMode(DIR1, OUTPUT);
+  pinMode(PWM1, OUTPUT);
+}
+
+//#define DIR1 17 // YELLOW DIR1 ON MOTOR DRIVER
+//#define PWM1 22
 #define EMG 23
 
 using namespace std;
@@ -15,40 +24,10 @@ void setup()
   pinMode(EMG,INPUT);
   Serial.begin(9600);
 }
-
-  class Motor
-{
-  public:
-    Motor(int In1pin, int PWMpin, const int offset);      
-    //void drive(Motor motor1,int speed);  
-    void drive(int speed, int duration);  
-    int In1, PWM, Offset;
-	//Stops motor by setting both input pins high
-    void brake(); 
-	
-  private:
-	//
-	
-	//private functions that spin the motor CC and CCW
-	void fwd(int speed);
-	void rev(int speed);
-  
-};
-void drive(Motor, int speed);
-
-void forward(Motor, int speed);
-//void forward(Motor motor1);
-
-void back(Motor, int speed);
-//void back(Motor motor1);
-
-void brake(Motor);
-
-#endif
-
+ 
+ 
 void loop()
 {
-   Motor motor1 = Motor(DIR1, PWM1, offsetA);
    //Use of the drive function which takes as arguements the speed
    //and optional duration.  A negative speed will cause it to go
    //backwards.  Speed can be from -255 to 255.  Also use of the 
