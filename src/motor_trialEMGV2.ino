@@ -2,22 +2,12 @@
 #include "SparkFun_TB6612.h"
 #include <Arduino.h>
 
-Motor::Motor1(int In1pin, int PWMpin, int offset)
-{
-  DIR1 = In1pin;
-  PWM1 = PWMpin;
-  OffsetA = offset;
-  
-  pinMode(DIR1, OUTPUT);
-  pinMode(PWM1, OUTPUT);
-}
 
-//#define DIR1 17 // YELLOW DIR1 ON MOTOR DRIVER
-//#define PWM1 22
+#define DIR1 17 // YELLOW DIR1 ON MOTOR DRIVER
+#define PWM1 22
 #define EMG 23
 
-using namespace std;
-const int offsetA = 1;
+const int OffsetA = 1;
 
 void setup()
 {
@@ -28,6 +18,7 @@ void setup()
  
 void loop()
 {
+  Motor motor1 = Motor(DIR1,PWM1,OffsetA);
    //Use of the drive function which takes as arguements the speed
    //and optional duration.  A negative speed will cause it to go
    //backwards.  Speed can be from -255 to 255.  Also use of the 
