@@ -2,12 +2,13 @@
 #include "SparkFun_TB6612.h"
 #include <Arduino.h>
 
-
-
 #define DIR1 17 // YELLOW DIR1 ON MOTOR DRIVER
 #define PWM1 13
 #define EMG 23
 #define DIR2 16
+
+int PrevPos = 0;
+int DesPos = 0;
 
 const int OffsetA = 1;
 Motor motor1 = Motor(DIR1,DIR2,PWM1,OffsetA);
@@ -36,31 +37,33 @@ void loop()
    Serial.println(angle);
    //Reading EMG value
 
-   //Use of the forward function, which takes as arguements two motors
-   //and optionally a speed.  If a negative number is used for speed
-   //it will go backwards
-   forward(motor1,motor2, 150);
+ while (PrevPos = 0){
+   forward(motor1,motor2, 10);
    delay(1000);
-   
-   //Use of the back function, which takes as arguments two motors 
-   //and optionally a speed.  Either a positive number or a negative
-   //number for speed will cause it to go backwards
-   back(motor1,motor2, -150);
+   PrevPos++;
+ }
+
+ while (DesPos > PrevPos){
+   forward(motor1,motor2, 10);
    delay(1000);
-   
-   //Use of the brake function which takes as arguments two motors.
-   //Note that functions do not stop motors on their own.
+   PrevPos++;
+ }
+
+ while (DesPos < PrevPos){
+   back(motor1,motor2, -10);
+   delay(1000);
+   DesPos++;
+ }
+
+ while (DesPos = PrevPos){
    brake(motor1, motor2);
    delay(1000);
-   
-   //Use of the left and right functions which take as arguements two
-   //motors and a speed.  This function turns both motors to move in 
-   //the appropriate direction.  For turning a single motor use drive.
-   motor1.drive(100);
-   delay(1000);
-   
-   //Use of brake again.
-   brake(motor1,motor2);
-   delay(1000);
-   
+ break;
+ }
+
+   PrevPos = DesPos;
+   DesPos = angle;
+
+end
+
 }
