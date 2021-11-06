@@ -37,6 +37,9 @@ void loop()
    Serial.println(angle);
    //Reading EMG value
 
+    PrevPos = DesPos;
+    DesPos = angle;
+    
  while (PrevPos = 0){
    forward(motor1,motor2, 10);
    delay(1000);
@@ -61,7 +64,6 @@ void loop()
  break;
  }
 
-   PrevPos = DesPos;
-   DesPos = angle;
+  
 
 }
