@@ -39,67 +39,73 @@ void loop()
    // delay(2500);
    // motor1.brake();
    // delay(1000);
-    
+  
     // PWM = 127.5 EXPECTED: 250 Degrees -- for a 2 second delay we were getting 150 degrees 
     // -- for 5 second delay we are getting around 360 degrees
-
    int val = analogRead(EMG); 
    int angle = map(val,1,1023,0,180);
-   Serial.println(angle);
+  // Serial.println(angle);
    //Reading EMG value
 
-  if (angle < 180 && angle > 135){
+
+
+  if (angle <= 180 && angle > 135){
      DesPos = 180;
      }
-  else if(angle < 135 && angle > 90){
+  else if(angle <=135 && angle > 90){
      DesPos = 135;
      }
-  else if(angle < 90 && angle > 45){
+  else if(angle <= 90 && angle > 45){
      DesPos = 90;
      }
-  else if(angle < 45 && angle > 0){
+  else if(angle <= 45 && angle > 2){
      DesPos = 45;
      }
   else{
     DesPos = 0;
   }
+Serial.println("DESPOS IS");
+Serial.println(DesPos);
+delay(1000);
+Serial.println("PREVPOS IS");
+Serial.println(PrevPos);
 
- if (DesPos = 0) {
-    if (PrevPos = 0){
+  if (DesPos == 0) {
+     if (PrevPos == 0){
+         motor1.brake();
+       }
+     else if (PrevPos == 45){
+         motor1.drive(-127.5);
+         delay(625);
+       }
+     else if (PrevPos == 90){
+         motor1.drive(-127.5);
+         delay(1250);
+       }
+     else if (PrevPos == 135){
+         motor1.drive(-127.5);
+         delay(1875);
+       }
+     else{
+         motor1.drive(-127.5);
+         delay(2500);
+       }
+       PrevPos = DesPos;
+     }
+
+ if (DesPos == 45) {
+    if (PrevPos == 45){
         motor1.brake();
       }
-    else if (PrevPos = 45){
+    else if (PrevPos == 90){
         motor1.drive(-127.5);
         delay(625);
       }
-    else if (PrevPos = 90){
-        motor1.drive(-127.5);
-        delay(1250);
-      }
-    else if (PrevPos = 135){
+    else if (PrevPos == 180){
         motor1.drive(-127.5);
         delay(1875);
       }
-    else{
-        motor1.drive(-127.5);
-        delay(2500);
-      }
-    PrevPos = DesPos;
-    }
-
- if (DesPos = 45) {
-    if (PrevPos = 45){
-        motor1.brake();
-      }
-    else if (PrevPos = 90){
-        motor1.drive(-127.5);
-        delay(625);
-      }
-    else if (PrevPos = 180){
-        motor1.drive(-127.5);
-        delay(1875);
-      }
-    else if (PrevPos = 135){
+    else if (PrevPos == 135){
         motor1.drive(-127.5);
         delay(1250);
       }
@@ -107,7 +113,79 @@ void loop()
         motor1.drive(127.5);
         delay(625);
       }
-    PrevPos = DesPos;
+       PrevPos = DesPos;
     }
+
+
+ if (DesPos == 90) {
+    if (PrevPos == 90){
+        motor1.brake();
+      }
+    else if (PrevPos == 45){
+        motor1.drive(127.5);
+        delay(625);
+      }
+    else if (PrevPos == 180){
+        motor1.drive(-127.5);
+        delay(1250);
+      }
+    else if (PrevPos == 135){
+        motor1.drive(-127.5);
+        delay(625);
+      }
+    else{
+        motor1.drive(127.5);
+        delay(1250);
+      }
+       PrevPos = DesPos;
+    }
+
+ if (DesPos == 135) {
+    if (PrevPos == 135){
+        motor1.brake();
+      }
+    else if (PrevPos == 45){
+        motor1.drive(127.5);
+        delay(1250);
+      }
+    else if (PrevPos == 180){
+        motor1.drive(-127.5);
+        delay(625);
+      }
+    else if (PrevPos == 90){
+        motor1.drive(127.5);
+        delay(625);
+      }
+    else{
+        motor1.drive(127.5);
+        delay(1875);
+      }
+       PrevPos = DesPos;
+    }
+
+
+    if (DesPos == 180) {
+    if (PrevPos == 180){
+        motor1.brake();
+      }
+    else if (PrevPos == 45){
+        motor1.drive(127.5);
+        delay(1875);
+      }
+    else if (PrevPos == 135){
+        motor1.drive(127.5);
+        delay(625);
+      }
+    else if (PrevPos == 90){
+        motor1.drive(127.5);
+        delay(1250);
+      }
+    else{
+        motor1.drive(127.5);
+        delay(2500);
+      }
+       PrevPos = DesPos;
+    }
+
 }
 
