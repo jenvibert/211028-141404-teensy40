@@ -2,11 +2,13 @@
 #include "SparkFun_TB6612.h"
 #include <Arduino.h>
 
-//****** INFORMATION
+/****************INFORMATION***************************
 // Since we are running the motor at 5V, the MAX RPM we can get is 83.33
 // Speed can stay constant and the input variable adjusts the delay amount
 // We found that manipulating trhe delay would help manipulate the angle
-//******
+// PWM = 127.5 EXPECTED: 250 Degrees -- for a 2 second delay we were getting 150 degrees 
+    // -- for 5 second delay we are getting around 360 degrees
+*******************************************************/
 
 #define DIR1 17 // YELLOW DIR1 ON MOTOR DRIVER
 #define PWM1 13
@@ -29,26 +31,12 @@ void setup()
  
 void loop()
 {
-   //Use of the drive function which takes as arguements the speed
-   //and optional duration.  A negative speed will cause it to go
-   //backwards.  Speed can be from -255 to 255 (PWM).  Also use of the 
-   //brake function which takes no arguements.
-   // motor1.drive(127.5);
-   // delay(2500);
-   // motor1.drive(-127.5);
-   // delay(2500);
-   // motor1.brake();
-   // delay(1000);
-  
-    // PWM = 127.5 EXPECTED: 250 Degrees -- for a 2 second delay we were getting 150 degrees 
-    // -- for 5 second delay we are getting around 360 degrees
+
+/*******READING EMG***********/
    int val = analogRead(EMG); 
    int angle = map(val,1,1023,0,180);
-  // Serial.println(angle);
-   //Reading EMG value
 
-
-
+/*******DESPOS ADJUSTING******/
   if (angle <= 180 && angle > 135){
      DesPos = 180;
      }
@@ -64,12 +52,14 @@ void loop()
   else{
     DesPos = 0;
   }
+
 Serial.println("DESPOS IS");
 Serial.println(DesPos);
 delay(1000);
 Serial.println("PREVPOS IS");
 Serial.println(PrevPos);
 
+/*************FOR DESPOS = 0*********/
   if (DesPos == 0) {
      if (PrevPos == 0){
          motor1.brake();
@@ -93,6 +83,7 @@ Serial.println(PrevPos);
        PrevPos = DesPos;
      }
 
+/*************FOR DESPOS = 45*********/
  if (DesPos == 45) {
     if (PrevPos == 45){
         motor1.brake();
@@ -116,7 +107,7 @@ Serial.println(PrevPos);
        PrevPos = DesPos;
     }
 
-
+/*************FOR DESPOS = 90*********/
  if (DesPos == 90) {
     if (PrevPos == 90){
         motor1.brake();
@@ -140,6 +131,7 @@ Serial.println(PrevPos);
        PrevPos = DesPos;
     }
 
+/*************FOR DESPOS = 135*********/
  if (DesPos == 135) {
     if (PrevPos == 135){
         motor1.brake();
@@ -163,7 +155,7 @@ Serial.println(PrevPos);
        PrevPos = DesPos;
     }
 
-
+/*************FOR DESPOS = 180*********/
     if (DesPos == 180) {
     if (PrevPos == 180){
         motor1.brake();
@@ -186,6 +178,6 @@ Serial.println(PrevPos);
       }
        PrevPos = DesPos;
     }
-
+//END OF VOID LOOP
 }
 
