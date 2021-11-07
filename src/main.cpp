@@ -33,65 +33,81 @@ void loop()
    //and optional duration.  A negative speed will cause it to go
    //backwards.  Speed can be from -255 to 255 (PWM).  Also use of the 
    //brake function which takes no arguements.
-    motor1.drive(127.5);
-    delay(2500);
-    motor1.drive(-127.5);
-    delay(2500);
-    motor1.brake();
-    delay(1000);
+   // motor1.drive(127.5);
+   // delay(2500);
+   // motor1.drive(-127.5);
+   // delay(2500);
+   // motor1.brake();
+   // delay(1000);
     
     // PWM = 127.5 EXPECTED: 250 Degrees -- for a 2 second delay we were getting 150 degrees 
     // -- for 5 second delay we are getting around 360 degrees
 
    int val = analogRead(EMG); 
-   int angle = map(val,1,1023,0,270);
+   int angle = map(val,1,1023,0,180);
    Serial.println(angle);
    //Reading EMG value
 
+  if (angle < 180 && angle > 135){
+     DesPos = 180;
+     }
+  else if(angle < 135 && angle > 90){
+     DesPos = 135;
+     }
+  else if(angle < 90 && angle > 45){
+     DesPos = 90;
+     }
+  else if(angle < 45 && angle > 0){
+     DesPos = 45;
+     }
+  else{
+    DesPos = 0;
+  }
+
+ if (DesPos = 0) {
+    if (PrevPos = 0){
+        motor1.brake();
+      }
+    else if (PrevPos = 45){
+        motor1.drive(-127.5);
+        delay(625);
+      }
+    else if (PrevPos = 90){
+        motor1.drive(-127.5);
+        delay(1250);
+      }
+    else if (PrevPos = 135){
+        motor1.drive(-127.5);
+        delay(1875);
+      }
+    else{
+        motor1.drive(-127.5);
+        delay(2500);
+      }
     PrevPos = DesPos;
-    DesPos = angle;
+    }
 
-   
-   while (PrevPos = 0){
-     Serial.println("In first Loop");
-     forward(motor1,motor2, 30);
-     delay(1000);
-     PrevPos++;
-     val = analogRead(EMG);
-     angle = map(val,1,1023,0,270);
-     Serial.println(angle);
-   }
-
-   while (DesPos > PrevPos){
-     Serial.println("In Second Loop");
-     motor1.drive(40,1000);
-     forward(motor1,motor2,40);
-     delay(1000);
-     PrevPos++;
-     val = analogRead(EMG);
-     angle = map(val,1,1023,0,270);
-     Serial.println(angle);
-   }
-
-   while (DesPos < PrevPos){
-     Serial.println("In Third Loop");
-     motor1.drive(-30, 1000);
-     //back(motor1,motor2, -20);
-     delay(1000);
-     DesPos++;
-     val = analogRead(EMG);
-     angle = map(val,1,1023,0,270);
-     Serial.println(angle);
-   }
-
-   while (DesPos = PrevPos){
-     Serial.println("In Break Loop");
-     brake(motor1, motor2);
-     delay(1000);
-     val = analogRead(EMG);
-     angle = map(val,1,1023,0,270);
-     Serial.println(angle);
-    break;
-   }
+ if (DesPos = 45) {
+    if (PrevPos = 45){
+        motor1.brake();
+      }
+    else if (PrevPos = 90){
+        motor1.drive(-127.5);
+        delay(625);
+      }
+    else if (PrevPos = 180){
+        motor1.drive(-127.5);
+        delay(1875);
+      }
+    else if (PrevPos = 135){
+        motor1.drive(-127.5);
+        delay(1250);
+      }
+    else{
+        motor1.drive(127.5);
+        delay(625);
+      }
+    PrevPos = DesPos;
+    }
 }
 
