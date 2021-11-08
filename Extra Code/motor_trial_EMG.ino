@@ -3,7 +3,7 @@
 
 #define ENCA 21 // YELLOW
 #define ENCB 20 // WHITE
-#define PWM 22
+#define PWM 13
 #define IN2 16
 #define IN1 17
 #define EMG 23
@@ -33,13 +33,7 @@ void loop() {
   //int target = 1200;
   //int target = 250*sin(prevT/1e6);
   int val = analogRead(EMG);
-  int angle = map(val,1,1023,0,180);
-  int target = angle;
-
-  // PID constants
-  float kp = 1;
-  float kd = 0.025;
-  float ki = 0.0;
+  int target = map(val,1,1023,0,180);
 
   // time difference
   long currT = micros();
@@ -57,14 +51,8 @@ void loop() {
   // error
   int e = pos - target;
 
-  // derivative
-  float dedt = (e-eprev)/(deltaT);
-
-  // integral
-  eintegral = eintegral + e*deltaT;
-
   // control signal
-  float u = kp*e + kd*dedt + ki*eintegral;
+  float u = e;
 
   // motor power
   float pwr = fabs(u);
