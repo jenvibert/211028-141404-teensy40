@@ -9,7 +9,6 @@
 #define EMG 23
 
 volatile int posi = 0; // specify posi as volatile: https://www.arduino.cc/reference/en/language/variables/variable-scope-qualifiers/volatile/
-float eprev = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -62,9 +61,6 @@ void loop() {
   // signal the motor
   setMotor(dir,pwr,PWM,IN1,IN2);
 
-
-  // store previous error
-  eprev = e;
 
   Serial.print(target);
   Serial.print(" ");
