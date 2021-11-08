@@ -9,9 +9,7 @@
 #define EMG 23
 
 volatile int posi = 0; // specify posi as volatile: https://www.arduino.cc/reference/en/language/variables/variable-scope-qualifiers/volatile/
-long prevT = 0;
 float eprev = 0;
-float eintegral = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -34,11 +32,6 @@ void loop() {
   //int target = 250*sin(prevT/1e6);
   int val = analogRead(EMG);
   int target = map(val,1,1023,0,180);
-
-  // time difference
-  long currT = micros();
-  float deltaT = ((float) (currT - prevT))/( 1.0e6 );
-  prevT = currT;
 
   // Read the position in an atomic block to avoid a potential
   // misread if the interrupt coincides with this code running
