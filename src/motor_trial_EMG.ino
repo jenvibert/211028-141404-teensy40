@@ -60,6 +60,10 @@ void loop() {
   //}
 
   int dir=0;
+
+  if ((newpos >= (target - 5)) && (newpos <= (target + 5))){
+    dir=0;
+  }
   if (newpos<target){
     dir=1;
   }
