@@ -41,7 +41,7 @@ void loop() {
   }
   
   // error
-  int e = pos - target;
+  int e = target - pos;
 
 
   // motor power
@@ -79,7 +79,7 @@ void setMotor(int dir, int pwmVal, int pwm, int in1, int in2){
     digitalWrite(in1,LOW);
     digitalWrite(in2,LOW);
   }  
-}
+} 
 
 void readEncoder(){
   int b = digitalRead(ENCB);

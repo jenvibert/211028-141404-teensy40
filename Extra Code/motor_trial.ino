@@ -25,7 +25,7 @@ void setup() {
   Serial.println("target pos");
 }
 
-void loop() {
+void loop() { 
 
   // set target position
   //int target = 1200;
