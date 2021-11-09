@@ -45,7 +45,7 @@ void loop() {
   // error
   int e = pos - target;
 
-  int newpos =map(pos,0,107280,0,180)
+  int newpos =map(pos,0,107280,0,180);
 
 
   // motor power
