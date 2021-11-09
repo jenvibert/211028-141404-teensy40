@@ -57,10 +57,12 @@ void loop() {
   setMotor(dir,pwr,PWM,IN1,IN2);
 
 
-  Serial.print(target);
-  Serial.print(" ");
-  Serial.print(pos);
-  Serial.println();
+  //Serial.print(target);
+  //Serial.print(" ");
+  //Serial.print(pos);
+  //Serial.println();
+  Serial.println("POSI VALUE");
+  Serial.println(posi);
 }
 
 void setMotor(int dir, int pwmVal, int pwm, int in1, int in2){
