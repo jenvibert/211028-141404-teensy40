@@ -64,10 +64,10 @@ void loop() {
   if ((newpos >= (target - 5)) && (newpos <= (target + 5))){
     dir=0;
   }
-  if (newpos<target){
+  else if (newpos<target){
     dir=1;
   }
-  if (newpos>target){
+  else if (newpos>target){
     dir=-1;
   }
 
