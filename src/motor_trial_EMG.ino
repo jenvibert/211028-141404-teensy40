@@ -9,7 +9,7 @@
 #define EMG 23
 
 volatile int posi = 0; // specify posi as volatile: https://www.arduino.cc/reference/en/language/variables/variable-scope-qualifiers/volatile/ 
-
+ 
 void setup() {
   Serial.begin(9600);
   pinMode(ENCA,INPUT);
@@ -39,9 +39,13 @@ void loop() {
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
     pos = posi;
   }
-  
+
+
+
   // error
   int e = pos - target;
+
+  
 
 
   // motor power
@@ -51,15 +55,18 @@ void loop() {
   }
 
   // motor direction
-  int dir = 1;
-  if(e<0){
-    dir = -1;
-  }
+  //int dir = 1;
+  //if(e<0){
+   // dir = -1;
+  
+  //}
+
+  int dir = (target<90)?-1:1;
+
 
   // signal the motor
   setMotor(dir,pwr,PWM,IN1,IN2);
-
-
+  
   Serial.print(target);
   Serial.print(" ");
   Serial.print(pos);
