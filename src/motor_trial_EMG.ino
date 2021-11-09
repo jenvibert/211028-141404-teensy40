@@ -9,6 +9,7 @@
 #define EMG 23
 
 volatile int posi = 0; // specify posi as volatile: https://www.arduino.cc/reference/en/language/variables/variable-scope-qualifiers/volatile/
+int pos = 0; 
 
 void setup() {
   Serial.begin(9600);
@@ -35,13 +36,13 @@ void loop() {
   // Read the position in an atomic block to avoid a potential
   // misread if the interrupt coincides with this code running
   // see: https://www.arduino.cc/reference/en/language/variables/variable-scope-qualifiers/volatile/
-  int pos = 0; 
+
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
     pos = posi;
   }
   
   // error
-  int e = target - pos;
+  int e = pos - target;
 
 
   // motor power
