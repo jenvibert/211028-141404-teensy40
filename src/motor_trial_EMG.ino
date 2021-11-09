@@ -45,14 +45,12 @@ void loop() {
   // error
   int e = pos - target;
 
-  
+  int newpos =map(pos,0,107280,0,180)
 
 
   // motor power
-  float pwr = fabs(e);
-  if( pwr > 255 ){
-    pwr = 255;
-  }
+  float pwr = 255;
+  
 
   // motor direction
   //int dir = 1;
@@ -61,7 +59,7 @@ void loop() {
   
   //}
 
-  int dir = (target<90)?-1:1;
+  int dir = (pos<target)?-1:1;
 
 
   // signal the motor
