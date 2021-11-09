@@ -60,10 +60,10 @@ void loop() {
   //}
 
   int dir=0;
-  if (pos<target){
+  if (newpos<target){
     dir=1;
   }
-  if (pos>target){
+  if (newpos>target){
     dir=-1;
   }
 
