@@ -45,7 +45,10 @@ void loop() {
 
 
   // motor power
-  float pwr = 255;
+  float pwr = fabs(e);
+  if( pwr > 255 ){
+    pwr = 255;
+  }
 
   // motor direction
   int dir = 1;
