@@ -45,7 +45,7 @@ void loop() {
 
 
   // motor power
-    float pwr = 255;
+  float pwr = 255;
 
   // motor direction
   int dir = 1;
