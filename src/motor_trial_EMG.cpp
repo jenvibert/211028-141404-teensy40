@@ -35,7 +35,10 @@ void loop() {
   // Read the position in an atomic block to avoid a potential
   // misread if the interrupt coincides with this code running
   // see: https://www.arduino.cc/reference/en/language/variables/variable-scope-qualifiers/volatile/
-  
+  int pos = 0; 
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+    pos = posi;
+  }
   
   // error
   int e = pos - target;
@@ -81,9 +84,9 @@ void setMotor(int dir, int pwmVal, int pwm, int in1, int in2){
 void readEncoder(){
   int b = digitalRead(ENCB);
   if(b > 0){
-    pos++;
+    posi++;
   }
   else{
-    pos--;
+    posi--;
   }
 }
