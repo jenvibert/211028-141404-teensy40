@@ -59,7 +59,7 @@ void loop() {
   
   //}
 
-  int dir = (pos<target)?-1:1;
+  int dir = (newpos<target)?-1:1;
 
 
   // signal the motor
