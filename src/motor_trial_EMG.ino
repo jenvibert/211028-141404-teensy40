@@ -59,8 +59,13 @@ void loop() {
   
   //}
 
-  int dir = (newpos<target)?-1:1;
-
+  int dir=0;
+  if (pos<target){
+    dir=1;
+  }
+  if (pos>target){
+    dir=-1;
+  }
 
   // signal the motor
   setMotor(dir,pwr,PWM,IN1,IN2);
