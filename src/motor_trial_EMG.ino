@@ -63,6 +63,7 @@ void loop() {
 
   if ((newpos >= (target - 5)) && (newpos <= (target + 5))){
     dir=0;
+    pwr=0;
   }
   else if (newpos<target){
     dir=1;
