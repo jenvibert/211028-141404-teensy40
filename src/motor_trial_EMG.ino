@@ -1,4 +1,4 @@
-# include <Arduino.h>
+#include <Arduino.h>
 #include <util/atomic.h> // For the ATOMIC_BLOCK macro
 
 #define ENCA 21 // YELLOW
@@ -43,18 +43,13 @@ void loop() {
   // error
   int e = pos - target;
 
-  // control signal
-  float u = e;
 
   // motor power
-  float pwr = fabs(u);
-  if( pwr > 255 ){
-    pwr = 255;
-  }
+    float pwr = 255;
 
   // motor direction
   int dir = 1;
-  if(u<0){
+  if(e<0){
     dir = -1;
   }
 
