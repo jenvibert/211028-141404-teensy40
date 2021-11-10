@@ -56,11 +56,12 @@ void loop() {
 
 
 
-  // error
-  int e = pos - target;
+  
 
   // new postion with mapped encoder
   int newpos =map(pos,0,2527,0,180);
+
+  int e = newpos - target;
 
   // derivative
   float dedt = (e-eprev)/(deltaT);
@@ -71,7 +72,7 @@ void loop() {
   // control signal
   float u = kp*e + kd*dedt + ki*eintegral;
 
- 
+  float pwr=255;
  
   
 
@@ -97,7 +98,10 @@ void loop() {
 */
 
   int dir = 0;
-  float pwr=0;
+  if ((u <= (5)) && (u >= (-5))){
+    dir=0;
+    pwr=0;
+  }
   if(u<0){
     dir = -1;
     pwr= 255;
