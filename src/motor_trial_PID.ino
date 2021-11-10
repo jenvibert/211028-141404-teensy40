@@ -8,11 +8,10 @@
 #define IN1 17
 #define EMG 23
 
-volatile int posi = 0; // specify posi as volatile: https://www.arduino.cc/reference/en/language/variables/variable-scope-qualifiers/volatile/ 
+volatile int posi = 0; // specify posi as volatile: https://www.arduino.cc/reference/en/language/variables/variable-scope-qualifiers/volatile/
 long prevT = 0;
 float eprev = 0;
 float eintegral = 0;
-
 
 void setup() {
   Serial.begin(9600);
@@ -28,14 +27,14 @@ void setup() {
   Serial.println("target pos");
 }
 
-void loop() {
+void loop() { 
 
   // set target position
   //int target = 1200;
   //int target = 250*sin(prevT/1e6);
   int val = analogRead(EMG);
   int target = map(val,1,1023,0,180);
-
+  
   // PID constants
   float kp = 1;
   float kd = 0.025;
@@ -49,19 +48,16 @@ void loop() {
   // Read the position in an atomic block to avoid a potential
   // misread if the interrupt coincides with this code running
   // see: https://www.arduino.cc/reference/en/language/variables/variable-scope-qualifiers/volatile/
-  int pos = 0; 
+  int unmappedpos = 0; 
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
-    pos = posi;
+    unmappedpos = posi;
   }
-
-
-
   
-
   // new postion with mapped encoder
-  int newpos =map(pos,0,2527,0,180);
-
-  int e = newpos - target;
+  int pos = map(unmappedpos,0,2527,0,180);
+  
+  // error
+  int e = target - pos;
 
   // derivative
   float dedt = (e-eprev)/(deltaT);
@@ -72,34 +68,12 @@ void loop() {
   // control signal
   float u = kp*e + kd*dedt + ki*eintegral;
 
-  float pwr=255;
- 
-  
+  // motor power
+  float pwr = 255;
 
   // motor direction
-  //int dir = 1;
-  //if(e<0){
-   // dir = -1;
-  
-  //}
-
-  //int dir=0;
-
-  /*if ((newpos <= (target + 5)) && (newpos >= (target - 5))){
-    dir=0;
-    pwr=0;
-  }
-  else if (newpos<target){
-    dir=1;
-  }
-  else if (newpos>target){
-    dir=-1;
-  }
-*/
-
-  int dir = 0;
+  int dir=0;
   if ((u <= (5)) && (u >= (-5))){
-    dir=0;
     pwr=0;
   }
   else if(u<0){
@@ -109,9 +83,9 @@ void loop() {
     dir = 1;
   }
 
-
   // signal the motor
   setMotor(dir,pwr,PWM,IN1,IN2);
+
 
   // store previous error
   eprev = e;
@@ -120,8 +94,6 @@ void loop() {
   Serial.print(" ");
   Serial.print(pos);
   Serial.println();
-  //Serial.println("POSI VALUE");
-  //Serial.println(posi);
 }
 
 void setMotor(int dir, int pwmVal, int pwm, int in1, int in2){
@@ -138,7 +110,7 @@ void setMotor(int dir, int pwmVal, int pwm, int in1, int in2){
     digitalWrite(in1,LOW);
     digitalWrite(in2,LOW);
   }  
-} 
+}
 
 void readEncoder(){
   int b = digitalRead(ENCB);
