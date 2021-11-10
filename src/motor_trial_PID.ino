@@ -102,16 +102,12 @@ void loop() {
     dir=0;
     pwr=0;
   }
-  if(u<0){
+  else if(u<0){
     dir = -1;
-    pwr= 255;
   }
   else if (u>0){
     dir = 1;
-    pwr= 255;
   }
-
-
 
 
   // signal the motor
