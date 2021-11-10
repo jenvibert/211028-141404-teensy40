@@ -72,15 +72,21 @@ void loop() {
   float pwr = 255;
 
   // motor direction
-  int dir=0;
-  if ((u <= (5)) && (u >= (-5))){
-    pwr=0;
-  }
-  else if(u<0){
+  //int dir=0;
+  //if ((u <= (5)) && (u >= (-5))){
+  //  pwr=0;
+  //}
+  //else if(u<0){
+  //  dir = -1;
+  //}
+  //else if (u>0){
+  //  dir = 1;
+  //}
+
+  // motor direction
+  int dir = 1;
+  if(u<0){
     dir = -1;
-  }
-  else if (u>0){
-    dir = 1;
   }
 
   // signal the motor
