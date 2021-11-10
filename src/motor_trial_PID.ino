@@ -9,7 +9,11 @@
 #define EMG 23
 
 volatile int posi = 0; // specify posi as volatile: https://www.arduino.cc/reference/en/language/variables/variable-scope-qualifiers/volatile/ 
- 
+long prevT = 0;
+float eprev = 0;
+float eintegral = 0;
+
+
 void setup() {
   Serial.begin(9600);
   pinMode(ENCA,INPUT);
@@ -32,6 +36,16 @@ void loop() {
   int val = analogRead(EMG);
   int target = map(val,1,1023,0,180);
 
+  // PID constants
+  float kp = 1;
+  float kd = 0.025;
+  float ki = 0.0;
+
+  // time difference
+  long currT = micros();
+  float deltaT = ((float) (currT - prevT))/( 1.0e6 );
+  prevT = currT;
+
   // Read the position in an atomic block to avoid a potential
   // misread if the interrupt coincides with this code running
   // see: https://www.arduino.cc/reference/en/language/variables/variable-scope-qualifiers/volatile/
@@ -44,13 +58,21 @@ void loop() {
 
   // error
   int e = pos - target;
- 
+
   // new postion with mapped encoder
   int newpos =map(pos,0,2527,0,180);
 
+  // derivative
+  float dedt = (e-eprev)/(deltaT);
 
-  // motor power
-  float pwr = 255;
+  // integral
+  eintegral = eintegral + e*deltaT;
+
+  // control signal
+  float u = kp*e + kd*dedt + ki*eintegral;
+
+ 
+ 
   
 
   // motor direction
@@ -60,9 +82,9 @@ void loop() {
   
   //}
 
-  int dir=0;
+  //int dir=0;
 
-  if ((newpos <= (target + 5)) && (newpos >= (target - 5))){
+  /*if ((newpos <= (target + 5)) && (newpos >= (target - 5))){
     dir=0;
     pwr=0;
   }
@@ -72,10 +94,28 @@ void loop() {
   else if (newpos>target){
     dir=-1;
   }
+*/
+
+  int dir = 0;
+  float pwr=0;
+  if(u<0){
+    dir = -1;
+    pwr= 255;
+  }
+  else if (u>0){
+    dir = 1;
+    pwr= 255;
+  }
+
+
+
 
   // signal the motor
   setMotor(dir,pwr,PWM,IN1,IN2);
-  
+
+  // store previous error
+  eprev = e;
+
   Serial.print(target);
   Serial.print(" ");
   Serial.print(pos);
