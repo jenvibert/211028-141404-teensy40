@@ -13,6 +13,32 @@ long prevT = 0;
 float eprev = 0;
 float eintegral = 0;
 
+void setMotor(int dir, int pwmVal, int pwm, int in1, int in2){
+  analogWrite(pwm,pwmVal);
+  if(dir == 1){
+    digitalWrite(in1,HIGH);
+    digitalWrite(in2,LOW);
+  }
+  else if(dir == -1){
+    digitalWrite(in1,LOW);
+    digitalWrite(in2,HIGH);
+  }
+  else{
+    digitalWrite(in1,LOW);
+    digitalWrite(in2,LOW);
+  }  
+}
+
+void readEncoder(){
+  int b = digitalRead(ENCB);
+  if(b > 0){
+    posi++;
+  }
+  else{
+    posi--;
+  }
+}
+
 void setup() {
   Serial.begin(9600);
   pinMode(ENCA,INPUT);
@@ -102,28 +128,3 @@ void loop() {
   Serial.println();
 }
 
-void setMotor(int dir, int pwmVal, int pwm, int in1, int in2){
-  analogWrite(pwm,pwmVal);
-  if(dir == 1){
-    digitalWrite(in1,HIGH);
-    digitalWrite(in2,LOW);
-  }
-  else if(dir == -1){
-    digitalWrite(in1,LOW);
-    digitalWrite(in2,HIGH);
-  }
-  else{
-    digitalWrite(in1,LOW);
-    digitalWrite(in2,LOW);
-  }  
-}
-
-void readEncoder(){
-  int b = digitalRead(ENCB);
-  if(b > 0){
-    posi++;
-  }
-  else{
-    posi--;
-  }
-}

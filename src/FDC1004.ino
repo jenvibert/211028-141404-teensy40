@@ -3,7 +3,7 @@
 
 #define UPPER_BOUND  0X4000                 // max readout capacitance
 #define LOWER_BOUND  (-1 * UPPER_BOUND)
-#define CHANNEL 0                          // channel to be read
+#define CHANNEL 0                         // channel to be read
 #define MEASURMENT 0                       // measurment channel
 
 int capdac = 0;
