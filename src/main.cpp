@@ -293,20 +293,23 @@ void loop()
         Serial.println(cap);
       
         // set target position
-        int target= map(cap,1,4000, 0, 180);
-        int val= analogRead(POT);
+        int target= map(cap,1500,5000, 0, 120);
+        Serial.println(target);
     
         
-  
+        // int unmappedpos=1;
         // new postion with mapped encoder
-        int pos = map(unmappedpos,0,2527,0,180);
+        //int pos = map(unmappedpos,0,2527,0,180);
   
         // error
-        int e = target - pos;
+        //int e = target - pos;
+
+
+
 
         // motor power
         float pwr = 255;
-
+        int e=1;
         // motor direction
         int dir = 1;
         if(e<0){
@@ -320,7 +323,6 @@ void loop()
         // store previous error
         Serial.print(target);
         Serial.print(" ");
-        Serial.print(pos);
         Serial.println();
     }
 }
