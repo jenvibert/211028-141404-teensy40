@@ -293,28 +293,47 @@ void loop()
         Serial.println(cap);
       
         // set target position
-        int target= map(cap,1500,5000, 0, 120);
-        Serial.println(target);
-    
+        int target= map(cap,1500,5000, -480, -360);
         
-        // int unmappedpos=1;
-        // new postion with mapped encoder
-        //int pos = map(unmappedpos,0,2527,0,180);
+        // PID constants
+        float kp = 1;
+        float kd = 0.025;
+        float ki = 0.0;
+
+        // time difference
+        long currT = micros();
+        float deltaT = ((float) (currT - prevT))/( 1.0e6 );
+        prevT = currT;
+    
+        int unmappedpos = 0; 
+        ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        unmappedpos = posi;
+        }
+
+        //new postion with mapped encoder
+        int pos = map(unmappedpos,0,2527,0,180);
   
         // error
-        //int e = target - pos;
+        int e = target - pos;
 
+        // derivative
+         float dedt = (e-eprev)/(deltaT);
 
+        // integral
+        eintegral = eintegral + e*deltaT;
+
+        // control signal
+        float u = kp*e + kd*dedt + ki*eintegral;
 
 
         // motor power
         float pwr = 255;
-        int e=1;
+       
         // motor direction
         int dir = 1;
-        if(e<0){
-        dir = -1;
-        }
+       // if(e<0){
+       // dir = -1;
+       // }
 
         // signal the motor
         setMotor(dir,pwr,PWM,IN1,IN2);
