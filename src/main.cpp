@@ -193,7 +193,7 @@ void setup() {
   pinMode(PWM,OUTPUT);
   pinMode(IN1,OUTPUT);
   pinMode(IN2,OUTPUT);
-  pinMode(FMG,INPUT);
+  pinMode(FMG,OUTPUT);
   
   Serial.println("target pos");
   // initialize the LED pin as an output.
@@ -291,79 +291,38 @@ void loop()
 
 
         Serial.println(cap);
-
-    // set target position
-    int val= analogWrite(FMG,cap);
-    int target = map(val,1,1023,0,180);
-  
-    // PID constants
-    float kp = 1;
-    float kd = 0.025;
-    float ki = 0.0;
-
-    // time difference
-    long currT = micros();
-    float deltaT = ((float) (currT - prevT))/( 1.0e6 );
-    prevT = currT;
-
-    // Read the position in an atomic block to avoid a potential
-    // misread if the interrupt coincides with this code running
-    // see: https://www.arduino.cc/reference/en/language/variables/variable-scope-qualifiers/volatile/
-    int unmappedpos = 0; 
-    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
-    unmappedpos = posi;
-    }
-  
-    // new postion with mapped encoder
-    int pos = map(unmappedpos,0,2527,0,180);
-  
-    // error
-    int e = target - pos;
-
-    // derivative
-    float dedt = (e-eprev)/(deltaT);
-
-    // integral
-    eintegral = eintegral + e*deltaT;
-
-    // control signal
-    float u = kp*e + kd*dedt + ki*eintegral;
-
-    // motor power
-    float pwr = 255;
-
-    // motor direction
-    //int dir=0;
-    //if ((u <= (5)) && (u >= (-5))){
-    //  pwr=0;
-    //}
-    //else if(u<0){
-    //  dir = -1;
-    //}
-    //else if (u>0){
-    //  dir = 1;
-    //}
-
-    // motor direction
-    int dir = 1;
-    if(u<0){
-    dir = -1;
-    }
-
-    // signal the motor
-    setMotor(dir,pwr,PWM,IN1,IN2);
-
-
-    // store previous error
-    eprev = e;
-
-    Serial.print(target);
-    Serial.print(" ");
-    Serial.print(pos);
-    Serial.println();
-}
+      
+        // set target position
+        int target= map(cap,1,4000, 0, 180);
+        analogWrite(FMG,target);
         
+  
+        // new postion with mapped encoder
+        int pos = map(unmappedpos,0,2527,0,180);
+  
+        // error
+        int e = target - pos;
 
+        // motor power
+        float pwr = 255;
+
+        // motor direction
+        int dir = 1;
+        if(e<0){
+        dir = -1;
+        }
+
+        // signal the motor
+        setMotor(dir,pwr,PWM,IN1,IN2);
+
+
+        // store previous error
+        Serial.print(target);
+        Serial.print(" ");
+        Serial.print(pos);
+        Serial.println();
+    }
+}
 
 
 
