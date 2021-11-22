@@ -9,7 +9,7 @@
 #define PWM 13
 #define IN2 16
 #define IN1 17
-#define FMG 23
+#define POT 23
 
 //int led = 13; // assign led pin
 // device array to hold all connected i2c devices and analog outputs. board is only capable of 24 I2C devices and 2 analog outputs so we initialize array of 26
@@ -193,7 +193,7 @@ void setup() {
   pinMode(PWM,OUTPUT);
   pinMode(IN1,OUTPUT);
   pinMode(IN2,OUTPUT);
-  pinMode(FMG,OUTPUT);
+  pinMode(POT,INPUT);
   
   Serial.println("target pos");
   // initialize the LED pin as an output.
@@ -294,7 +294,8 @@ void loop()
       
         // set target position
         int target= map(cap,1,4000, 0, 180);
-        analogWrite(FMG,target);
+        int val= analogRead(POT);
+    
         
   
         // new postion with mapped encoder
