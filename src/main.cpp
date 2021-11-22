@@ -293,7 +293,7 @@ void loop()
         Serial.println(cap);
       
         // set target position
-        int target= map(cap,1500,5000, -480, -360);
+        int target= map(cap,1500,7000, 0, 255);
         
         // PID constants
         float kp = 1;
@@ -331,9 +331,9 @@ void loop()
        
         // motor direction
         int dir = 1;
-       // if(e<0){
-       // dir = -1;
-       // }
+        if(e<0){
+        dir = -1;
+        }
 
         // signal the motor
         setMotor(dir,pwr,PWM,IN1,IN2);
