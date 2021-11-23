@@ -129,7 +129,6 @@ int I2Cscanner()
   }
 
   return nDevices;
-  Serial.print(nDevices);
 }
 
 // method to handle input
