@@ -293,41 +293,54 @@ void loop()
         Serial.println(cap);
       
         // set target position
-        int armforce = map(cap,1500,7000, 0, 255);
+        int target= map(cap,1500,7000, 0, 255);
+        
+        // PID constants
+        float kp = 1;
+        float kd = 0.025;
+        float ki = 0.0;
+
+        // time difference
+        long currT = micros();
+        float deltaT = ((float) (currT - prevT))/( 1.0e6 );
+        prevT = currT;
+    
+        int unmappedpos = 0; 
+        ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        unmappedpos = posi;
+        }
 
         //new postion with mapped encoder
-        int fingertip = map(cap,1500,7000, 0, 255);
-
+        int pos = map(unmappedpos,0,2527,0,180);
   
+        // error
+        int e = target - pos;
+
+        // derivative
+         float dedt = (e-eprev)/(deltaT);
+
+        // integral
+        eintegral = eintegral + e*deltaT;
+
+        // control signal
+        float u = kp*e + kd*dedt + ki*eintegral;
+
+
         // motor power
         float pwr = 255;
        
         // motor direction
-
-        int dir=0;
-
-        if ((armforce <= ( fingertip + 5)) && (armforce >= (fingertip - 5))){
-            dir=0;
-            pwr=0;
+        int dir = 1;
+        if(e<0){
+        dir = -1;
         }
-        else if (armforce<fingertip){
-            dir=1;
-        }
-        else if (armforce>fingertip){
-            dir=-1;
-        }
-
-        
 
         // signal the motor
         setMotor(dir,pwr,PWM,IN1,IN2);
 
 
         // store previous error
-        Serial.print(armforce);
-        Serial.print(" ");
-        Serial.println();
-        Serial.print(fingertip);
+        Serial.print(target);
         Serial.print(" ");
         Serial.println();
     }
@@ -336,4 +349,4 @@ void loop()
 
 
 
-  
+    
