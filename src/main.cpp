@@ -6,16 +6,16 @@
 
 #define ENCA 21 // YELLOW
 #define ENCB 20 // WHITE
-#define PWM 13
-#define IN2 16
-#define IN1 17
+#define PWM 4
+#define IN2 14
+#define IN1 15
 #define POT 23
 
 //int led = 13; // assign led pin
 // device array to hold all connected i2c devices and analog outputs. board is only capable of 24 I2C devices and 2 analog outputs so we initialize array of 26
 // device array indices: [j][0] = I2C address [j][1] = bus [j][2] = capdac 
 int deviceArray[24][3] = {0}; 
-int led = 14; // assign led pin
+int led = 13; // assign led pin
 
 volatile int posi = 0; // specify posi as volatile: https://www.arduino.cc/reference/en/language/variables/variable-scope-qualifiers/volatile/
 long prevT = 0;
