@@ -1,11 +1,10 @@
-#include <Arduino.h>
-#include "FDC1004.h"
+#include <Arduino.h> // Teensy Library
+#include "FDC1004.h" // Capacitance Sensor Library
 #include <Wire.h>
 #include <util/atomic.h> // For the ATOMIC_BLOCK macro
 
-
-#define ENCA 21 // YELLOW
-#define ENCB 20 // WHITE
+#define ENCA 21 
+#define ENCB 20 
 #define PWM 4
 #define IN2 14
 #define IN1 15
@@ -13,8 +12,8 @@
 
 //int led = 13; // assign led pin
 // device array to hold all connected i2c devices and analog outputs. board is only capable of 24 I2C devices and 2 analog outputs so we initialize array of 26
-// device array indices: [j][0] = I2C address [j][1] = bus [j][2] = capdac 
-int deviceArray[24][3] = {0}; 
+// device array indices: [j][0] = I2C address [j][1] = bus [j][2] = capdac
+int deviceArray[24][3] = {0};
 int led = 13; // assign led pin
 
 volatile int posi = 0; // specify posi as volatile: https://www.arduino.cc/reference/en/language/variables/variable-scope-qualifiers/volatile/
@@ -70,7 +69,7 @@ float getReadingFromFDCwithAddressAndBus(TwoWire &bus, int addr, int capdac, int
       if (capdac > 0)
         capdac--;
     }
-    
+
     deviceArray[i][2] = capdac;
 
     return capacitance;
@@ -92,7 +91,6 @@ int I2Cscanner()
   {
     Wire.beginTransmission(address);
     error = Wire.endTransmission();
-  
 
     if (error == 0) // if no I2C errors at the searched address, a device was found.
     {
@@ -157,49 +155,55 @@ bool handleInput()
   return false;
 }
 
-void setMotor(int dir, int pwmVal, int pwm, int in1, int in2){
-  analogWrite(pwm,pwmVal);
-  if(dir == 1){
-    digitalWrite(in1,HIGH);
-    digitalWrite(in2,LOW);
+void setMotor(int dir, int pwmVal, int pwm, int in1, int in2)
+{
+  analogWrite(pwm, pwmVal);
+  if (dir == 1)
+  {
+    digitalWrite(in1, HIGH);
+    digitalWrite(in2, LOW);
   }
-  else if(dir == -1){
-    digitalWrite(in1,LOW);
-    digitalWrite(in2,HIGH);
+  else if (dir == -1)
+  {
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, HIGH);
   }
-  else{
-    digitalWrite(in1,LOW);
-    digitalWrite(in2,LOW);
-  }  
+  else
+  {
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, LOW);
+  }
 }
 
-void readEncoder(){
+void readEncoder()
+{
   int b = digitalRead(ENCB);
-  if(b > 0){
+  if (b > 0)
+  {
     posi++;
   }
-  else{
+  else
+  {
     posi--;
   }
 }
 
-
-void setup() {
+void setup()
+{
   // put your setup code here, to run once:
-  pinMode(ENCA,INPUT);
-  pinMode(ENCB,INPUT);
-  attachInterrupt(digitalPinToInterrupt(ENCA),readEncoder,RISING);
-  
-  pinMode(PWM,OUTPUT);
-  pinMode(IN1,OUTPUT);
-  pinMode(IN2,OUTPUT);
-  pinMode(POT,INPUT);
-  
+  pinMode(ENCA, INPUT);
+  pinMode(ENCB, INPUT);
+  attachInterrupt(digitalPinToInterrupt(ENCA), readEncoder, RISING);
+
+  pinMode(PWM, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(POT, INPUT);
+
   Serial.println("target pos");
   // initialize the LED pin as an output.
   pinMode(led, OUTPUT);
   digitalWrite(led, HIGH); // turn the LED on (HIGH is the voltage level) while set up is ongoing
-
 
   // Serial INIT
   Serial.begin(115200); // serial baud rate
@@ -213,11 +217,11 @@ void setup() {
   delay(500);
 
   // blink LED once to signify set up started
-  digitalWrite(led, LOW); 
+  digitalWrite(led, LOW);
   delay(250);
-  digitalWrite(led, HIGH); 
+  digitalWrite(led, HIGH);
   delay(250);
-  digitalWrite(led, LOW); 
+  digitalWrite(led, LOW);
   delay(250);
 
   // scan for sensors and populate deviceArray
@@ -242,98 +246,83 @@ void setup() {
       break;
   }
 
-
   digitalWrite(led, HIGH); // set Led high to show that setup complete
 
   // here we should have a device array full of FDC device ID and bus
   // setup complete.
 }
 
-
-
-void loop() 
+void loop()
 {
-  
 
-      // data collection part: sample the sensors, and print them in the necessary key val format to the serial port
+  // data collection part: sample the sensors, and print them in the necessary key val format to the serial port
 
-      int i;
+  int i;
 
-      for (i = 0; i < sensorCount; i++)
-      {
+  for (i = 0; i < sensorCount; i++)
+  {
 
-        int addr = deviceArray[i][0]; // get the I2C address
-        int capdac = deviceArray[i][2]; // get the capdac value
+    int addr = deviceArray[i][0];   // get the I2C address
+    int capdac = deviceArray[i][2]; // get the capdac value
 
+    configureMeasurementonFDCwithAddressAndBus(Wire, addr, capdac, i);
+  }
 
-          configureMeasurementonFDCwithAddressAndBus(Wire, addr, capdac, i);
+  delay(3); // delay 3 ms to let FDC capture data
 
-      }
+  for (i = 0; i < sensorCount; i++)
+  {
 
-      delay(3); // delay 3 ms to let FDC capture data
+    int addr = deviceArray[i][0];   // get the I2C address
+    int capdac = deviceArray[i][2]; // get the capdac value
 
+    long cap = 0;
+    // configure measurement at specified address and bus from device ID
 
-      for (i = 0; i < sensorCount; i++)
-      {
+    cap = getReadingFromFDCwithAddressAndBus(Wire, addr, capdac, i);
 
-        int addr = deviceArray[i][0]; // get the I2C address
-        int capdac = deviceArray[i][2]; // get the capdac value
+    capValues[i][2] = cap;
+    capValues[i][0] = addr;
+    capValues[i][1] = 0;
 
-        long cap = 0;
-        // configure measurement at specified address and bus from device ID
-        
-        cap = getReadingFromFDCwithAddressAndBus(Wire, addr, capdac, i);
+    Serial.println(cap);
 
+    // set target position
+    int armforce = map(cap, 1500, 7000, 0, 255);
 
-        capValues[i][2] = cap;
-        capValues[i][0] = addr;
-        capValues[i][1] = 0;
+    //new postion with mapped encoder
+    int fingertip = map(cap, 1500, 7000, 0, 255);
 
+    // motor power
+    float pwr = 255;
 
-        Serial.println(cap);
-      
-        // set target position
-        int armforce = map(cap,1500,7000, 0, 255);
+    // motor direction
 
-        //new postion with mapped encoder
-        int fingertip = map(cap,1500,7000, 0, 255);
+    int dir = 0;
 
-  
-        // motor power
-        float pwr = 255;
-       
-        // motor direction
-
-        int dir=0;
-
-        if ((armforce <= ( fingertip + 5)) && (armforce >= (fingertip - 5))){
-            dir=0;
-            pwr=0;
-        }
-        else if (armforce<fingertip){
-            dir=1;
-        }
-        else if (armforce>fingertip){
-            dir=-1;
-        }
-
-        
-
-        // signal the motor
-        setMotor(dir,pwr,PWM,IN1,IN2);
-
-
-        // store previous error
-        Serial.print(armforce);
-        Serial.print(" ");
-        Serial.println();
-        Serial.print(fingertip);
-        Serial.print(" ");
-        Serial.println();
+    if ((armforce <= (fingertip + 5)) && (armforce >= (fingertip - 5)))
+    {
+      dir = 0;
+      pwr = 0;
     }
+    else if (armforce < fingertip)
+    {
+      dir = 1;
+    }
+    else if (armforce > fingertip)
+    {
+      dir = -1;
+    }
+
+    // signal the motor
+    setMotor(dir, pwr, PWM, IN1, IN2);
+
+    // store previous error
+    Serial.print(armforce);
+    Serial.print(" ");
+    Serial.println();
+    Serial.print(fingertip);
+    Serial.print(" ");
+    Serial.println();
+  }
 }
-
-
-
-
-  
