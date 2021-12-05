@@ -13,7 +13,7 @@ long prevT = 0;
 float eprev = 0;
 float eintegral = 0;
 
-void setMotor(int dir, int pwmVal, int pwm, int in1, int in2){
+void setMotor(int dir, int pwmVal, int pwm, int in1, int in2){ //setting up motor 
   analogWrite(pwm,pwmVal);
   if(dir == 1){
     digitalWrite(in1,HIGH);
@@ -29,7 +29,7 @@ void setMotor(int dir, int pwmVal, int pwm, int in1, int in2){
   }  
 }
 
-void readEncoder(){
+void readEncoder(){ //read encoder 
   int b = digitalRead(ENCB);
   if(b > 0){
     posi++;
@@ -43,7 +43,7 @@ void setup() {
   Serial.begin(9600);
   pinMode(ENCA,INPUT);
   pinMode(ENCB,INPUT);
-  attachInterrupt(digitalPinToInterrupt(ENCA),readEncoder,RISING);
+  attachInterrupt(digitalPinToInterrupt(ENCA),readEncoder,RISING); //Interrupt on encoder A, looks for rising edge as trigger
   
   pinMode(PWM,OUTPUT);
   pinMode(IN1,OUTPUT);
@@ -96,18 +96,6 @@ void loop() {
 
   // motor power
   float pwr = 255;
-
-  // motor direction
-  //int dir=0;
-  //if ((u <= (5)) && (u >= (-5))){
-  //  pwr=0;
-  //}
-  //else if(u<0){
-  //  dir = -1;
-  //}
-  //else if (u>0){
-  //  dir = 1;
-  //}
 
   // motor direction
   int dir = 1;
